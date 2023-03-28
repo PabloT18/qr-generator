@@ -8,6 +8,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.3.6"
+  args:
+    dependency: transitive
+    description:
+      name: args
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.4.0"
   async:
     dependency: transitive
     description:
@@ -109,6 +116,20 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  http:
+    dependency: transitive
+    description:
+      name: http
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.13.5"
+  http_parser:
+    dependency: transitive
+    description:
+      name: http_parser
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.0.2"
   image:
     dependency: "direct main"
     description:
@@ -123,6 +144,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.7.1"
+  jovial_misc:
+    dependency: transitive
+    description:
+      name: jovial_misc
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.8.5"
+  jovial_svg:
+    dependency: "direct main"
+    description:
+      name: jovial_svg
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.9"
   js:
     dependency: transitive
     description:

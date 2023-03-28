@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'dart:ui' as ui;
 import 'package:flutter/rendering.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:jovial_svg/jovial_svg.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:async';
 
@@ -13,9 +14,7 @@ void main() => runApp(ExampleApp());
 
 GlobalKey _globalKey = GlobalKey();
 
-/// The example application class
 class ExampleApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -185,16 +184,35 @@ class MyWidget extends StatelessWidget {
                 ),
               ),
               Container(
+                height: 60,
+                clipBehavior: Clip.hardEdge,
+                padding: const EdgeInsets.all(5),
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.white,
                 ),
-                child: Center(
-                    child: Image.asset(
-                  'assets/images/mundo.png',
-                  scale: 1.3,
-                )),
-              ),
+                // child: Center(
+                //     child: Image.asset(
+                //   'assets/images/mundo.png',
+                //   scale: 1.3,
+                // )),
+                child: FutureBuilder<ScalableImage>(
+                    future: ScalableImage.fromSvgAsset(rootBundle, logomundo),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Center(
+                            child: ScalableImageWidget(
+                          si: snapshot.data!,
+                          fit: BoxFit.contain,
+                          // scale: 1.3,
+                        ));
+                      } else {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                    }),
+              )
             ],
           ),
           const SizedBox(
@@ -230,90 +248,45 @@ class MyWidget extends StatelessWidget {
 }
 
 final listado = [
+  // {
+  //   'link': 'https://forms.office.com/r/mEWi3RZHgw',
+  //   'nombre': 'D1 Mañ Entrada',
+  //   'file': 'FormD1MañEnt-QRB'
+  // },
+  // {
+  //   'link':
+  //       'https://estliveupsedu-my.sharepoint.com/:b:/g/personal/ptorresp_ups_edu_ec/EV7_u_vZGBxIvMQRwPP1V-MBQ1rXQFqbbG4bslbKvIMKEA?e=Pxbiua',
+  //   'nombre': 'Agenda',
+  //   'file': 'Agenda-QRB'
+  // },
   {
-    'link':
-        'https://estliveupsedu-my.sharepoint.com/:b:/g/personal/ptorresp_ups_edu_ec/EbtU-SSWoaRMj-1lhbgqLE0BFcKEMsHEFj-fjRtw8gnd4g?e=zlw0bb',
-    'nombre': 'Manual UPS',
-    'file': 'arc1'
+    'link': 'https://forms.office.com/r/K99b8sw5xi',
+    'nombre': 'Ubicación Inglés',
+    'file': 'UbicaciónInglés-QR'
   },
   {
-    'link': 'https://forms.office.com/r/KDZMvqqpxn',
-    'nombre': 'G1 D1 Entrada',
-    'file': 'FormG1D1Ent-QRB'
+    'link': 'https://forms.office.com/r/kPzgvgsyXB',
+    'nombre': 'D1 Tar Salida',
+    'file': 'FormD1TarSal-QRB'
   },
   {
-    'link': 'https://forms.office.com/r/Nv9cL12Xxm',
-    'nombre': 'G1 D1 Salida',
-    'file': 'FormG1D1Sal-QRB'
+    'link': 'https://forms.office.com/r/iUgzbRkPnR',
+    'nombre': 'D2 Mañ Entrada',
+    'file': 'FormD2MañEnt-QRB'
   },
   {
-    'link': 'https://forms.office.com/r/A70XEF1mCX',
-    'nombre': 'G1 D2 Entrada',
-    'file': 'FormG1D2Ent-QRB'
+    'link': 'https://forms.office.com/r/cj55t0Tn1U',
+    'nombre': 'D2 Mañ Salida',
+    'file': 'FormD2MañSal-QRB'
   },
   {
-    'link': 'https://forms.office.com/r/cKjtkvLe7a',
-    'nombre': 'G1 D2 Salida',
-    'file': 'FormG1D2Sal-QRB'
+    'link': 'https://forms.office.com/r/aKFhTCLVjc',
+    'nombre': 'D2 Tar Entrada',
+    'file': 'FormD2TarEnt-QRB'
   },
   {
-    'link': 'https://forms.office.com/r/bmkwUc0rtc',
-    'nombre': 'G2 D1 Entrada',
-    'file': 'FormG2D1Ent-QRB'
-  },
-  {
-    'link': 'https://forms.office.com/r/R6i3dLRVic',
-    'nombre': 'G2 D1 Salida',
-    'file': 'FormG2D1Sal-QRB'
-  },
-  {
-    'link': 'https://forms.office.com/r/AETxXGXZV7',
-    'nombre': 'G2 D2 Entrada',
-    'file': 'FormG2D2Ent-QRB'
-  },
-  {
-    'link': 'https://forms.office.com/r/kvRK7Vu1JU',
-    'nombre': 'G2 D2 Salida',
-    'file': 'FormG2D2Sal-QRB'
-  },
-  {
-    'link': 'https://forms.office.com/r/CPrhQ6d202',
-    'nombre': 'G3 D1 Entrada',
-    'file': 'FormG3D1Ent-QRB'
-  },
-  {
-    'link': 'https://forms.office.com/r/4qNKDHmgKs',
-    'nombre': 'G3 D1 Salida',
-    'file': 'FormG3D1Sal-QRB'
-  },
-  {
-    'link': 'https://forms.office.com/r/XS2tSD8dYb',
-    'nombre': 'G3 D2 Entrada',
-    'file': 'FormG3D2Ent-QRB'
-  },
-  {
-    'link': 'https://forms.office.com/r/9y8RrjMZNu',
-    'nombre': 'G3 D2 Salida',
-    'file': 'FormG3D2Sal-QRB'
-  },
-  {
-    'link': 'https://forms.office.com/r/xcfj9K53Kr',
-    'nombre': 'G4 D1 Entrada',
-    'file': 'FormG4D1Ent-QRB'
-  },
-  {
-    'link': 'https://forms.office.com/r/M3SiNtNDr6',
-    'nombre': 'G4 D1 Salida',
-    'file': 'FormG4D1Sal-QRB'
-  },
-  {
-    'link': 'https://forms.office.com/r/Nvbrz3unRU',
-    'nombre': 'G4 D2 Entrada',
-    'file': 'FormG4D2Ent-QRB'
-  },
-  {
-    'link': 'https://forms.office.com/r/1BQ1VC0dD2',
-    'nombre': 'G4 D2 Salida',
-    'file': 'FormG4D2Sal-QRB'
+    'link': 'https://forms.office.com/r/PgBWWB1Qm8',
+    'nombre': 'D2 Tar Salida',
+    'file': 'FormD2TarSal-QRB'
   },
 ];
