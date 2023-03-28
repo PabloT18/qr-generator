@@ -133,6 +133,9 @@ class MainScreenState extends State<MainScreen> {
                         itemCustomMap['file'] = value;
                       },
                     ),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
