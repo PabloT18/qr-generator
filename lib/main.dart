@@ -10,11 +10,13 @@ import 'dart:async';
 
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 
-void main() => runApp(ExampleApp());
+void main() => runApp(const App());
 
 GlobalKey _globalKey = GlobalKey();
 
-class ExampleApp extends StatelessWidget {
+class App extends StatelessWidget {
+  const App({super.key});
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -23,27 +25,38 @@ class ExampleApp extends StatelessWidget {
       systemNavigationBarColor: Colors.white,
       systemNavigationBarIconBrightness: Brightness.dark,
     ));
+
     return MaterialApp(
       title: 'QR.Flutter',
       theme: ThemeData.light(),
       debugShowCheckedModeBanner: false,
-      home: MainScreen(),
+      home: const MainScreen(),
     );
   }
 }
 
-/// This is the screen that you'll see when the app starts
 class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
+
   @override
-  _MainScreenState createState() => _MainScreenState();
+  MainScreenState createState() => MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class MainScreenState extends State<MainScreen> {
   late int itemIndex;
+
+  late bool itemCustom;
+  late Map<String, String> itemCustomMap;
 
   @override
   void initState() {
     itemIndex = 0;
+    itemCustom = false;
+    itemCustomMap = {
+      'link': '',
+      'nombre': '',
+      'file': '',
+    };
     super.initState();
   }
 
@@ -52,30 +65,117 @@ class _MainScreenState extends State<MainScreen> {
     return Material(
       color: Colors.white,
       child: SafeArea(
-        // top: true,
-        bottom: true,
-        child: Container(
+        child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
               const SizedBox(
-                height: 100,
+                height: 30,
               ),
               ImageGenerator(
-                item: listado[itemIndex],
+                item: itemCustom ? itemCustomMap : listado[itemIndex],
               ),
-              ElevatedButton(
-                  onPressed: () async {
-                    await _captureAndSavePng();
-                    setState(() {
-                      itemIndex = itemIndex + 1;
-                    });
-                  },
-                  child: const Text('GuardarImagen ')),
+              const Divider(),
               Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 20, horizontal: 40)
-                          .copyWith(bottom: 40),
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
                   child: Text(itemIndex.toString())),
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 10),
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 21,
+                    ),
+                    TextField(
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        labelText: 'Link',
+                        hintText: 'Link',
+
+                        // prefixIcon: Icon(icon),
+                      ),
+                      onChanged: (value) {
+                        itemCustomMap['link'] = value;
+                      },
+                    ),
+                    const SizedBox(
+                      height: 21,
+                    ),
+                    TextField(
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        labelText: 'Name',
+                        hintText: 'Name',
+
+                        // prefixIcon: Icon(icon),
+                      ),
+                      onChanged: (value) {
+                        itemCustomMap['nombre'] = value;
+                      },
+                    ),
+                    const SizedBox(
+                      height: 21,
+                    ),
+                    TextField(
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        labelText: 'File Name',
+                        hintText: 'File Name',
+
+                        // prefixIcon: Icon(icon),
+                      ),
+                      onChanged: (value) {
+                        itemCustomMap['file'] = value;
+                      },
+                    ),
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              itemCustom ? null : const Color(0xff1e367c),
+                          foregroundColor: Colors.white,
+                          elevation: 3,
+                          shape: RoundedRectangleBorder(
+                            side: const BorderSide(
+                              color: Colors.black,
+                              width: 0.5,
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        onPressed: () async {
+                          print(itemCustomMap);
+                          itemCustom = !itemCustom;
+                          setState(() {});
+                        },
+                        child: const Text('Custom Data')),
+                    ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xff1e367c),
+                          foregroundColor: Colors.white,
+                          elevation: 3,
+                          shape: RoundedRectangleBorder(
+                            side: const BorderSide(
+                              color: Colors.black,
+                              width: 0.5,
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        onPressed: () async {
+                          await _captureAndSavePng();
+                          setState(() {
+                            itemIndex = itemIndex + 1;
+                          });
+                        },
+                        child: const Text('GuardarImagen ')),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -84,14 +184,6 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Future<void> _captureAndSavePng() async {
-    // RenderRepaintBoundary boundary =
-    // _globalKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
-    // double pixelRatio = MediaQuery.of(context).devicePixelRatio;
-    // ui.Image image = await boundary.toImage(pixelRatio: pixelRatio);
-    // ByteData? byteData =
-    //     await image.toByteData(format: ui.ImageByteFormat.png);
-    // var pngBytes = byteData!.buffer.asUint8List();
-
     RenderRepaintBoundary boundary =
         _globalKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
     double pixelRatio = MediaQuery.of(context).devicePixelRatio;
@@ -107,28 +199,6 @@ class _MainScreenState extends State<MainScreen> {
       quality: 100,
     );
   }
-
-  // Future<img.Image> _convertWidgetToImage(GlobalKey key) async {
-  //   RenderRepaintBoundary boundary =
-  //       key.currentContext!.findRenderObject() as RenderRepaintBoundary;
-  //   ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-  //   ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-  //   Uint8List pngBytes = byteData!.buffer.asUint8List();
-
-  //   return img.decodeImage(pngBytes)!;
-  // }
-
-  // Future<File> _saveImage(img.Image image) async {
-  //   final directory = await getExternalStorageDirectory();
-  //   final imagePath = '${directory!.path}/my_image.png';
-  //   File(imagePath).writeAsBytesSync(img.encodePng(image));
-  //   return File(imagePath);
-  // }
-
-  // Future<void> _saveWidgetAsImage() async {
-  //   img.Image image = await _convertWidgetToImage(_globalKey);
-  //   File imageFile = await _saveImage(image);
-  // }
 }
 
 class ImageGenerator extends StatelessWidget {
@@ -191,11 +261,6 @@ class MyWidget extends StatelessWidget {
                   shape: BoxShape.circle,
                   color: Colors.white,
                 ),
-                // child: Center(
-                //     child: Image.asset(
-                //   'assets/images/mundo.png',
-                //   scale: 1.3,
-                // )),
                 child: FutureBuilder<ScalableImage>(
                     future: ScalableImage.fromSvgAsset(rootBundle, logomundo),
                     builder: (context, snapshot) {
